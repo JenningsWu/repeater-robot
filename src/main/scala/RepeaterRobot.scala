@@ -26,9 +26,9 @@ class RepeaterRobot(val token: String) extends TelegramBot with Polling with Com
         val result = Await.result(redis.incr(key), 1 seconds)
         redis.expire(key, MESSAGE_TIMEOUT)
         if (result == REPEAT_AFTER) {
-          msg.forwardFromChat match {
-            case Some(fromChat) =>
-              request(ForwardMessage(msg.source, fromChat.id, false, msg.messageId))
+          msg.forwardFrom match {
+            case Some(_) =>
+              request(ForwardMessage(msg.source, msg.source, false, msg.messageId))
             case None =>
               request(SendMessage(msg.source, text))
           }
